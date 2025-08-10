@@ -1,0 +1,44 @@
+{
+  "mcpServers": {
+    "weather": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/absolute/path/to/weather",
+        "run",
+        "weather.py"
+      ],
+      "env": {
+        "WEATHER_API_KEY": "your-api-key-here"
+      }
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/Users/username/Documents"
+      ]
+    },
+    "brave-search": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "brave-search-mcp"
+      ],
+      "env": {
+        "BRAVE_API_KEY": "YOUR_API_KEY_HERE"
+      }
+    },
+    "sentry": {
+      "url": "https://mcp.sentry.dev/mcp"
+    },
+    "everything": {
+      "command": "npx",
+      "args": [
+        "-y", 
+        "@modelcontextprotocol/server-everything"
+      ]
+    }
+  }
+}

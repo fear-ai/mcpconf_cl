@@ -1,0 +1,581 @@
+# Complete MCP Server Registry Example
+# This demonstrates all supported configuration patterns and features
+
+version: "1.0"
+
+categories:
+  weather:
+    - weather-local
+    - openweather-api
+    - weather-gov
+  development:
+    - filesystem-tools
+    - git-integration
+    - cli-tools
+    - database-manager
+  ai:
+    - openai-api
+    - anthropic-api
+    - local-llm
+  monitoring:
+    - sentry-remote
+    - prometheus-metrics
+  cloud:
+    - cloudflare-bindings
+    - aws-mcp-server
+    - aws-bedrock
+
+servers:
+  # Local STDIO server with full configuration
+  weather-local:
+    name: "Local Weather Service"
+    description: "Python-based weather data provider with API integration"
+    version: "1.2.3"
+    license: "MIT"
+    source_url: "https://github.com/example/weather-mcp"
+    
+    deployment: local
+    
+    config:
+      transport: stdio
+      command: "uv"
+      args: ["--directory", "/absolute/path/to/weather", "run", "weather.py"]
+      env:
+        WEATHER_API_KEY: "${input:weather_key}"
+        DEBUG: "false"
+        CACHE_TTL: "300"
+      working_dir: "/absolute/path/to/weather"
+      timeout: 45
+    
+    capabilities:
+      tools: ["get_weather", "get_forecast", "get_alerts"]
+      resources: ["weather://current", "weather://forecast/*", "weather://alerts/*"]
+      prompts: ["weather-report", "forecast-summary"]
+    
+    requirements:
+      platforms: ["linux", "darwin", "win32"]
+      runtimes:
+        python: ">=3.8.0 <4"
+      dependencies: ["requests", "python-dateutil", "pydantic"]
+      network: true
+    
+    security:
+      requires_auth: true
+      permissions: ["network.http", "fs.read:/weather-data"]
+      sandbox: true
+    
+    compatibility:
+      claude_desktop: ">=0.10.0"
+      mcpred: ">=1.0.0"
+
+  # Remote HTTP server
+  openweather-api:
+    name: "OpenWeather API"
+    description: "Remote weather service via OpenWeather API"
+    version: "2.1.0"
+    license: "proprietary"
+    source_url: "https://openweathermap.org/api"
+    
+    deployment: remote
+    
+    config:
+      transport: https
+      url: "https://api.openweathermap.org/mcp/v1"
+      headers:
+        Authorization: "Bearer ${input:openweather_token}"
+        User-Agent: "mcpred/1.0.0"
+        Accept: "application/json"
+      timeout: 15
+    
+    capabilities:
+      tools: ["current_weather", "forecast", "historical_data"]
+      resources: ["openweather://weather/*", "openweather://forecast/*"]
+    
+    requirements:
+      platforms: ["any"]
+      network: true
+    
+    security:
+      requires_auth: true
+      permissions: ["network.https"]
+
+  # Government weather service
+  weather-gov:
+    name: "Weather.gov API"
+    description: "US National Weather Service API"
+    version: "1.0.0"
+    license: "public-domain"
+    source_url: "https://weather.gov/documentation/services-web-api"
+    
+    deployment: remote
+    
+    config:
+      transport: https
+      url: "https://api.weather.gov/mcp"
+      headers:
+        User-Agent: "mcpred/1.0.0 (contact@example.com)"
+      timeout: 20
+    
+    capabilities:
+      tools: ["get_alerts", "get_forecast", "get_stations"]
+      resources: ["nws://alerts/*", "nws://forecast/*", "nws://stations/*"]
+    
+    requirements:
+      platforms: ["any"]
+      network: true
+    
+    security:
+      requires_auth: false
+      permissions: ["network.https"]
+
+  # Filesystem tools with extensive permissions
+  filesystem-tools:
+    name: "File System Manager"
+    description: "Complete filesystem operations and management"
+    version: "2.0.1"
+    license: "Apache-2.0"
+    source_url: "https://github.com/example/fs-mcp"
+    
+    deployment: local
+    
+    config:
+      transport: stdio
+      command: "python"
+      args: ["${__dirname}/fs_server.py", "--workspace=${user_config.workspace}"]
+      env:
+        FS_MAX_FILE_SIZE: "100MB"
+        FS_ALLOWED_EXTENSIONS: ".txt,.md,.json,.yaml"
+        DEBUG: "${user_config.debug_mode}"
+      working_dir: "/opt/mcp/filesystem"
+      timeout: 60
+    
+    capabilities:
+      tools: ["list_files", "read_file", "write_file", "delete_file", "create_directory", "get_file_info"]
+      resources: ["file://*", "directory://*"]
+      prompts: ["file-analysis", "directory-summary"]
+    
+    requirements:
+      platforms: ["linux", "darwin", "win32"]
+      runtimes:
+        python: ">=3.9.0"
+      dependencies: ["aiofiles", "pathlib", "mimetypes"]
+    
+    security:
+      requires_auth: false
+      permissions: [
+        "fs.read:/home/user/documents",
+        "fs.write:/home/user/documents", 
+        "fs.create:/home/user/documents",
+        "fs.delete:/home/user/documents"
+      ]
+      sandbox: true
+    
+    compatibility:
+      claude_desktop: ">=0.10.0"
+      mcpred: ">=1.0.0"
+
+  # Git integration server
+  git-integration:
+    name: "Git Operations"
+    description: "Git repository management and operations"
+    version: "1.5.2"
+    license: "MIT"
+    source_url: "https://github.com/example/git-mcp"
+    
+    deployment: local
+    
+    config:
+      transport: stdio
+      command: "node"
+      args: ["dist/git-server.js"]
+      env:
+        GIT_AUTHOR_NAME: "${input:git_name}"
+        GIT_AUTHOR_EMAIL: "${input:git_email}"
+        GIT_MAX_DIFF_SIZE: "10000"
+      timeout: 30
+    
+    capabilities:
+      tools: ["git_status", "git_diff", "git_commit", "git_push", "git_log", "git_branch"]
+      resources: ["git://repository/*", "git://branch/*", "git://commit/*"]
+    
+    requirements:
+      platforms: ["linux", "darwin", "win32"]
+      runtimes:
+        node: ">=16.0.0"
+      dependencies: ["simple-git", "fs-extra"]
+    
+    security:
+      requires_auth: true
+      permissions: ["fs.read:/repository", "fs.write:/repository", "network.git"]
+      sandbox: false
+
+  # CLI tools server with restricted commands
+  cli-tools:
+    name: "CLI Command Runner"
+    description: "Safe execution of CLI commands with restrictions"
+    version: "0.8.0"
+    license: "BSD-3-Clause"
+    source_url: "https://github.com/MladenSU/cli-mcp-server"
+    
+    deployment: local
+    
+    config:
+      transport: stdio
+      command: "uvx"
+      args: ["cli-mcp-server"]
+      env:
+        ALLOWED_DIR: "/home/user/projects"
+        ALLOWED_COMMANDS: "ls,cat,pwd,echo,grep,find"
+        ALLOWED_FLAGS: "-l,-a,--help,--version,-n,-r"
+        MAX_COMMAND_LENGTH: "1024"
+        COMMAND_TIMEOUT: "30"
+        ALLOW_SHELL_OPERATORS: "false"
+      timeout: 35
+    
+    capabilities:
+      tools: ["execute_command", "list_allowed_commands"]
+      resources: ["command://allowed/*"]
+    
+    requirements:
+      platforms: ["linux", "darwin"]
+      runtimes:
+        python: ">=3.8.0"
+    
+    security:
+      requires_auth: false
+      permissions: ["exec.restricted", "fs.read:/home/user/projects"]
+      sandbox: true
+    
+    compatibility:
+      claude_desktop: ">=0.10.0"
+
+  # Database management server
+  database-manager:
+    name: "Database Manager"
+    description: "Multi-database query and management interface"
+    version: "3.1.0"
+    license: "GPL-3.0"
+    source_url: "https://github.com/example/db-mcp"
+    
+    deployment: local
+    
+    config:
+      transport: stdio
+      command: "python"
+      args: ["-m", "db_mcp", "--config", "db_config.json"]
+      env:
+        DB_MAX_QUERY_TIME: "300"
+        DB_MAX_RESULTS: "1000"
+        DB_ENABLE_TRANSACTIONS: "true"
+      timeout: 120
+    
+    capabilities:
+      tools: ["execute_query", "list_tables", "describe_table", "backup_database"]
+      resources: ["db://tables/*", "db://queries/*", "db://backups/*"]
+    
+    requirements:
+      platforms: ["linux", "darwin", "win32"]
+      runtimes:
+        python: ">=3.10.0"
+      dependencies: ["sqlalchemy", "psycopg2", "pymongo", "redis"]
+      network: true
+    
+    security:
+      requires_auth: true
+      permissions: ["network.database", "fs.write:/backups"]
+      sandbox: true
+
+  # OpenAI API integration
+  openai-api:
+    name: "OpenAI Integration"
+    description: "OpenAI API access for various AI capabilities"
+    version: "4.2.1"
+    license: "MIT"
+    source_url: "https://github.com/example/openai-mcp"
+    
+    deployment: hybrid
+    
+    config:
+      transport: stdio
+      command: "python"
+      args: ["-m", "openai_mcp"]
+      env:
+        OPENAI_API_KEY: "${input:openai_key}"
+        OPENAI_ORG_ID: "${input:openai_org}"
+        MAX_TOKENS: "4000"
+        TEMPERATURE: "0.7"
+      timeout: 60
+    
+    capabilities:
+      tools: ["chat_completion", "text_embedding", "image_generation", "speech_to_text"]
+      resources: ["openai://models/*", "openai://completions/*"]
+    
+    requirements:
+      platforms: ["any"]
+      runtimes:
+        python: ">=3.8.0"
+      dependencies: ["openai", "httpx"]
+      network: true
+    
+    security:
+      requires_auth: true
+      permissions: ["network.https", "fs.cache:/tmp/openai"]
+
+  # Anthropic API integration
+  anthropic-api:
+    name: "Anthropic Claude API"
+    description: "Direct integration with Anthropic's Claude API"
+    version: "1.8.0"
+    license: "MIT"
+    
+    deployment: remote
+    
+    config:
+      transport: https
+      url: "https://api.anthropic.com/mcp/v1"
+      headers:
+        Authorization: "Bearer ${input:anthropic_key}"
+        X-API-Version: "2023-06-01"
+        Content-Type: "application/json"
+      timeout: 90
+    
+    capabilities:
+      tools: ["create_message", "list_models"]
+      resources: ["anthropic://messages/*", "anthropic://models/*"]
+    
+    requirements:
+      platforms: ["any"]
+      network: true
+    
+    security:
+      requires_auth: true
+      permissions: ["network.https"]
+
+  # Local LLM server
+  local-llm:
+    name: "Local LLM Server"
+    description: "Self-hosted language model inference"
+    version: "2.5.0"
+    license: "Apache-2.0"
+    source_url: "https://github.com/example/local-llm-mcp"
+    
+    deployment: local
+    
+    config:
+      transport: http
+      url: "http://localhost:8080/mcp"
+      headers:
+        Content-Type: "application/json"
+      timeout: 120
+    
+    capabilities:
+      tools: ["generate_text", "embed_text", "list_models"]
+      resources: ["llm://models/*", "llm://generations/*"]
+    
+    requirements:
+      platforms: ["linux", "darwin"]
+      runtimes:
+        python: ">=3.9.0"
+      dependencies: ["torch", "transformers", "accelerate"]
+    
+    security:
+      requires_auth: false
+      permissions: ["network.localhost", "fs.read:/models"]
+
+  # Sentry error tracking
+  sentry-remote:
+    name: "Sentry Error Tracking"
+    description: "Remote Sentry integration for error monitoring"
+    version: "2.1.0"
+    license: "proprietary"
+    source_url: "https://mcp.sentry.dev"
+    
+    deployment: remote
+    
+    config:
+      transport: https
+      url: "https://mcp.sentry.dev/mcp"
+      headers:
+        Authorization: "Bearer ${input:sentry_token}"
+        User-Agent: "mcpred/1.0.0"
+      timeout: 15
+    
+    capabilities:
+      tools: ["search_issues", "create_issue", "get_project_stats", "list_releases"]
+      resources: ["sentry://projects/*", "sentry://issues/*", "sentry://releases/*"]
+    
+    requirements:
+      platforms: ["any"]
+      network: true
+    
+    security:
+      requires_auth: true
+      permissions: ["network.https"]
+
+  # Prometheus metrics
+  prometheus-metrics:
+    name: "Prometheus Metrics"
+    description: "Prometheus monitoring and metrics collection"
+    version: "1.3.0"
+    license: "Apache-2.0"
+    source_url: "https://github.com/example/prometheus-mcp"
+    
+    deployment: hybrid
+    
+    config:
+      transport: http
+      url: "http://localhost:9090/mcp"
+      timeout: 30
+    
+    capabilities:
+      tools: ["query_metrics", "list_targets", "get_alerts"]
+      resources: ["prometheus://metrics/*", "prometheus://targets/*"]
+    
+    requirements:
+      platforms: ["linux", "darwin"]
+      network: true
+    
+    security:
+      requires_auth: false
+      permissions: ["network.localhost"]
+
+  # Cloudflare bindings
+  cloudflare-bindings:
+    name: "Cloudflare Bindings"
+    description: "Cloudflare Workers and platform integration"
+    version: "1.0.2"
+    license: "MIT"
+    source_url: "https://github.com/cloudflare/mcp-server-cloudflare"
+    
+    deployment: remote
+    
+    config:
+      transport: https
+      url: "https://bindings.mcp.cloudflare.com/sse"
+      headers:
+        Authorization: "Bearer ${input:cf_token}"
+      timeout: 20
+    
+    capabilities:
+      tools: ["deploy_worker", "list_zones", "get_analytics"]
+      resources: ["cloudflare://workers/*", "cloudflare://zones/*"]
+    
+    requirements:
+      platforms: ["any"]
+      network: true
+    
+    security:
+      requires_auth: true
+      permissions: ["network.https"]
+
+  # AWS MCP Server (Official AWS Labs implementation)
+  aws-mcp-server:
+    name: "AWS MCP Server"
+    description: "Official AWS Labs MCP server providing comprehensive AWS API support"
+    version: "1.0.0"
+    license: "Apache-2.0"
+    source_url: "https://github.com/awslabs/mcp"
+    documentation_url: "https://awslabs.github.io/mcp/"
+    
+    deployment: local
+    
+    config:
+      transport: stdio
+      command: "npx"
+      args: ["-y", "@aws/mcp-server-aws", "--region", "${input:aws_region}"]
+      env:
+        AWS_PROFILE: "${input:aws_profile}"
+        AWS_REGION: "${input:aws_region}"
+        AWS_ACCESS_KEY_ID: "${input:aws_access_key_id}"
+        AWS_SECRET_ACCESS_KEY: "${input:aws_secret_access_key}"
+        AWS_SESSION_TOKEN: "${input:aws_session_token}"
+      timeout: 60
+    
+    capabilities:
+      tools: [
+        "aws_cli_command",
+        "list_resources", 
+        "describe_resource",
+        "create_resource",
+        "update_resource",
+        "delete_resource",
+        "get_caller_identity",
+        "assume_role"
+      ]
+      resources: [
+        "aws://s3/*",
+        "aws://ec2/*", 
+        "aws://lambda/*",
+        "aws://iam/*",
+        "aws://cloudformation/*",
+        "aws://logs/*",
+        "aws://dynamodb/*"
+      ]
+      prompts: [
+        "aws-best-practices",
+        "security-recommendations", 
+        "cost-optimization"
+      ]
+    
+    requirements:
+      platforms: ["linux", "darwin", "win32"]
+      runtimes:
+        node: ">=18.0.0"
+      dependencies: ["aws-sdk", "@aws-sdk/client-*"]
+      network: true
+    
+    security:
+      requires_auth: true
+      permissions: ["network.https", "fs.read:~/.aws", "exec.aws-cli"]
+      sandbox: false
+    
+    compatibility:
+      claude_desktop: ">=0.10.0"
+      mcpred: ">=1.0.0"
+
+  # AWS Bedrock MCP Server
+  aws-bedrock:
+    name: "AWS Bedrock MCP Server"
+    description: "AWS Bedrock integration for AI model access and knowledge bases"
+    version: "1.2.0"
+    license: "Apache-2.0"
+    source_url: "https://github.com/awslabs/mcp"
+    documentation_url: "https://aws.amazon.com/blogs/machine-learning/unlocking-the-power-of-model-context-protocol-mcp-on-aws/"
+    
+    deployment: local
+    
+    config:
+      transport: stdio
+      command: "npx"
+      args: ["-y", "@aws/mcp-server-bedrock"]
+      env:
+        AWS_PROFILE: "${input:aws_profile}"
+        AWS_REGION: "${input:aws_region}"
+        BEDROCK_MODEL_ID: "${input:bedrock_model_id}"
+      timeout: 120
+    
+    capabilities:
+      tools: [
+        "invoke_model",
+        "list_foundation_models",
+        "get_model_details",
+        "create_knowledge_base_query",
+        "list_knowledge_bases"
+      ]
+      resources: [
+        "bedrock://models/*",
+        "bedrock://knowledge-bases/*",
+        "bedrock://custom-models/*"
+      ]
+    
+    requirements:
+      platforms: ["linux", "darwin", "win32"]
+      runtimes:
+        node: ">=18.0.0"
+      dependencies: ["@aws-sdk/client-bedrock-runtime", "@aws-sdk/client-bedrock"]
+      network: true
+    
+    security:
+      requires_auth: true
+      permissions: ["network.https", "fs.read:~/.aws"]
+      sandbox: true
