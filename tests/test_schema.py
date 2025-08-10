@@ -1,7 +1,7 @@
 """Tests for schema validation and parsing."""
 
 import pytest
-from mcpred.schema import (
+from mcpconf.schema import (
     RegistrySchema, ServerEntry, ServerConfig, TransportType, DeploymentType,
     Capabilities, Requirements, Security, Compatibility
 )
@@ -150,7 +150,7 @@ class TestRegistrySchema:
             },
             "compatibility": {
                 "claude_desktop": ">=0.10.0",
-                "mcpred": ">=1.0.0"
+                "mcpconf": ">=1.0.0"
             }
         }
         
@@ -171,7 +171,7 @@ class TestRegistrySchema:
         assert server.security.permissions == ["fs.read"]
         assert server.security.sandbox is True
         assert server.compatibility.claude_desktop == ">=0.10.0"
-        assert server.compatibility.mcpred == ">=1.0.0"
+        assert server.compatibility.mcpconf == ">=1.0.0"
     
     def test_parse_registry_valid(self):
         """Test parsing valid registry."""

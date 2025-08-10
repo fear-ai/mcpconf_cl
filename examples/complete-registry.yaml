@@ -66,7 +66,7 @@ servers:
     
     compatibility:
       claude_desktop: ">=0.10.0"
-      mcpred: ">=1.0.0"
+      mcpconf: ">=1.0.0"
 
   # Remote HTTP server
   openweather-api:
@@ -83,7 +83,7 @@ servers:
       url: "https://api.openweathermap.org/mcp/v1"
       headers:
         Authorization: "Bearer ${input:openweather_token}"
-        User-Agent: "mcpred/1.0.0"
+        User-Agent: "mcpconf/1.0.0"
         Accept: "application/json"
       timeout: 15
     
@@ -113,7 +113,7 @@ servers:
       transport: https
       url: "https://api.weather.gov/mcp"
       headers:
-        User-Agent: "mcpred/1.0.0 (contact@example.com)"
+        User-Agent: "mcpconf/1.0.0 (contact@example.com)"
       timeout: 20
     
     capabilities:
@@ -172,7 +172,7 @@ servers:
     
     compatibility:
       claude_desktop: ">=0.10.0"
-      mcpred: ">=1.0.0"
+      mcpconf: ">=1.0.0"
 
   # Git integration server
   git-integration:
@@ -397,7 +397,7 @@ servers:
       url: "https://mcp.sentry.dev/mcp"
       headers:
         Authorization: "Bearer ${input:sentry_token}"
-        User-Agent: "mcpred/1.0.0"
+        User-Agent: "mcpconf/1.0.0"
       timeout: 15
     
     capabilities:
@@ -531,7 +531,7 @@ servers:
     
     compatibility:
       claude_desktop: ">=0.10.0"
-      mcpred: ">=1.0.0"
+      mcpconf: ">=1.0.0"
 
   # AWS Bedrock MCP Server
   aws-bedrock:

@@ -317,8 +317,8 @@ class MCPServerRegistry:
             compat = {}
             if server.compatibility.claude_desktop:
                 compat["claude_desktop"] = server.compatibility.claude_desktop
-            if server.compatibility.mcpred:
-                compat["mcpred"] = server.compatibility.mcpred
+            if server.compatibility.mcpconf:
+                compat["mcpconf"] = server.compatibility.mcpconf
             if compat:
                 result["compatibility"] = compat
         

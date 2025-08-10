@@ -1,0 +1,65 @@
+# .gitignore
+
+# Log files
+logs/
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Python
+.python-version
+__pycache__/
+*.py[cod]
+*$py.class
+uv.lock
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+.dockerignore
+docker-compose.override.yml
+
+# Testing and coverage
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+reports/
+.mypy_cache/
+.bandit
+bandit_results.json
+safety_results.json
+
+# IDEs and editors
+.claude/
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Potentially large files
+*.csv
+*.xlsx
+*.json.bak
+

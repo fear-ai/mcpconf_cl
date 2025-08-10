@@ -57,7 +57,7 @@ class Security:
 @dataclass
 class Compatibility:
     claude_desktop: Optional[str] = None
-    mcpred: Optional[str] = None
+    mcpconf: Optional[str] = None
 
 
 @dataclass
@@ -171,7 +171,7 @@ class RegistrySchema:
             compat_data = data["compatibility"]
             compatibility = Compatibility(
                 claude_desktop=compat_data.get("claude_desktop"),
-                mcpred=compat_data.get("mcpred")
+                mcpconf=compat_data.get("mcpconf")
             )
         
         return ServerEntry(

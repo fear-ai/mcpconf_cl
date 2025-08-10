@@ -1,8 +1,8 @@
 """Tests for format conversion utilities."""
 
 import pytest
-from mcpred.converters import FormatConverter
-from mcpred.schema import ServerEntry, ServerConfig, TransportType, DeploymentType, Capabilities
+from mcpconf.converters import FormatConverter
+from mcpconf.schema import ServerEntry, ServerConfig, TransportType, DeploymentType, Capabilities
 
 
 class TestFormatConverter:

@@ -226,7 +226,7 @@ def main():
     """Main CLI entry point."""
     parser = argparse.ArgumentParser(
         description="MCP Server Registry Management",
-        prog="mcpred"
+        prog="mcpconf"
     )
     parser.add_argument(
         "--registry", "-r",

@@ -8,7 +8,7 @@ from pathlib import Path
 from unittest.mock import patch
 from io import StringIO
 
-from mcpred.cli import main
+from mcpconf.cli import main
 
 
 class TestCLI:
@@ -52,7 +52,7 @@ class TestCLI:
     
     def test_list_command(self, sample_registry_file):
         """Test list command."""
-        with patch('sys.argv', ['mcpred', '--registry', sample_registry_file, 'list']):
+        with patch('sys.argv', ['mcpconf', '--registry', sample_registry_file, 'list']):
             with patch('sys.stdout', new=StringIO()) as fake_out:
                 main()
                 output = fake_out.getvalue()
@@ -62,7 +62,7 @@ class TestCLI:
     
     def test_list_command_deployment_filter(self, sample_registry_file):
         """Test list command with deployment filter."""
-        with patch('sys.argv', ['mcpred', '--registry', sample_registry_file, 'list', '--deployment', 'local']):
+        with patch('sys.argv', ['mcpconf', '--registry', sample_registry_file, 'list', '--deployment', 'local']):
             with patch('sys.stdout', new=StringIO()) as fake_out:
                 main()
                 output = fake_out.getvalue()
@@ -71,7 +71,7 @@ class TestCLI:
     
     def test_list_command_detailed(self, sample_registry_file):
         """Test list command with detailed output."""
-        with patch('sys.argv', ['mcpred', '--registry', sample_registry_file, 'list', '--detailed']):
+        with patch('sys.argv', ['mcpconf', '--registry', sample_registry_file, 'list', '--detailed']):
             with patch('sys.stdout', new=StringIO()) as fake_out:
                 main()
                 output = fake_out.getvalue()
@@ -81,7 +81,7 @@ class TestCLI:
     
     def test_show_command(self, sample_registry_file):
         """Test show command."""
-        with patch('sys.argv', ['mcpred', '--registry', sample_registry_file, 'show', 'test-server']):
+        with patch('sys.argv', ['mcpconf', '--registry', sample_registry_file, 'show', 'test-server']):
             with patch('sys.stdout', new=StringIO()) as fake_out:
                 main()
                 output = fake_out.getvalue()
@@ -93,7 +93,7 @@ class TestCLI:
     
     def test_show_command_not_found(self, sample_registry_file):
         """Test show command for non-existent server."""
-        with patch('sys.argv', ['mcpred', '--registry', sample_registry_file, 'show', 'nonexistent']):
+        with patch('sys.argv', ['mcpconf', '--registry', sample_registry_file, 'show', 'nonexistent']):
             with patch('sys.stdout', new=StringIO()) as fake_out:
                 with pytest.raises(SystemExit):
                     main()
@@ -102,7 +102,7 @@ class TestCLI:
     
     def test_search_command(self, sample_registry_file):
         """Test search command."""
-        with patch('sys.argv', ['mcpred', '--registry', sample_registry_file, 'search', 'Remote']):
+        with patch('sys.argv', ['mcpconf', '--registry', sample_registry_file, 'search', 'Remote']):
             with patch('sys.stdout', new=StringIO()) as fake_out:
                 main()
                 output = fake_out.getvalue()
@@ -112,7 +112,7 @@ class TestCLI:
     
     def test_search_command_no_results(self, sample_registry_file):
         """Test search command with no results."""
-        with patch('sys.argv', ['mcpred', '--registry', sample_registry_file, 'search', 'nonexistent']):
+        with patch('sys.argv', ['mcpconf', '--registry', sample_registry_file, 'search', 'nonexistent']):
             with patch('sys.stdout', new=StringIO()) as fake_out:
                 main()
                 output = fake_out.getvalue()
@@ -120,7 +120,7 @@ class TestCLI:
     
     def test_convert_command_claude(self, sample_registry_file):
         """Test convert command to Claude Desktop format."""
-        with patch('sys.argv', ['mcpred', '--registry', sample_registry_file, 'convert', 'test-server', 'claude']):
+        with patch('sys.argv', ['mcpconf', '--registry', sample_registry_file, 'convert', 'test-server', 'claude']):
             with patch('sys.stdout', new=StringIO()) as fake_out:
                 main()
                 output = fake_out.getvalue()
@@ -132,7 +132,7 @@ class TestCLI:
     def test_convert_command_with_output_file(self, sample_registry_file):
         """Test convert command with output file."""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as output_file:
-            with patch('sys.argv', ['mcpred', '--registry', sample_registry_file, 'convert', 'test-server', 'claude', '--output', output_file.name]):
+            with patch('sys.argv', ['mcpconf', '--registry', sample_registry_file, 'convert', 'test-server', 'claude', '--output', output_file.name]):
                 with patch('sys.stdout', new=StringIO()) as fake_out:
                     main()
                     output = fake_out.getvalue()
@@ -147,7 +147,7 @@ class TestCLI:
     
     def test_convert_command_hosts_format(self, sample_registry_file):
         """Test convert command to hosts format."""
-        with patch('sys.argv', ['mcpred', '--registry', sample_registry_file, 'convert', 'test-server', 'hosts']):
+        with patch('sys.argv', ['mcpconf', '--registry', sample_registry_file, 'convert', 'test-server', 'hosts']):
             with patch('sys.stdout', new=StringIO()) as fake_out:
                 main()
                 output = fake_out.getvalue().strip()
@@ -155,7 +155,7 @@ class TestCLI:
     
     def test_validate_command_specific_server(self, sample_registry_file):
         """Test validate command for specific server."""
-        with patch('sys.argv', ['mcpred', '--registry', sample_registry_file, 'validate', 'test-server']):
+        with patch('sys.argv', ['mcpconf', '--registry', sample_registry_file, 'validate', 'test-server']):
             with patch('sys.stdout', new=StringIO()) as fake_out:
                 main()
                 output = fake_out.getvalue()
@@ -163,7 +163,7 @@ class TestCLI:
     
     def test_validate_command_all_servers(self, sample_registry_file):
         """Test validate command for all servers."""
-        with patch('sys.argv', ['mcpred', '--registry', sample_registry_file, 'validate']):
+        with patch('sys.argv', ['mcpconf', '--registry', sample_registry_file, 'validate']):
             with patch('sys.stdout', new=StringIO()) as fake_out:
                 main()
                 output = fake_out.getvalue()
@@ -187,7 +187,7 @@ class TestCLI:
             
             # Create temporary registry file
             with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as registry_file:
-                with patch('sys.argv', ['mcpred', '--registry', registry_file.name, 'import', claude_file.name]):
+                with patch('sys.argv', ['mcpconf', '--registry', registry_file.name, 'import', claude_file.name]):
                     with patch('sys.stdout', new=StringIO()) as fake_out:
                         main()
                         output = fake_out.getvalue()
@@ -215,7 +215,7 @@ class TestCLI:
             
             # Create temporary registry file
             with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as registry_file:
-                with patch('sys.argv', ['mcpred', '--registry', registry_file.name, 'import', claude_file.name, '--save']):
+                with patch('sys.argv', ['mcpconf', '--registry', registry_file.name, 'import', claude_file.name, '--save']):
                     with patch('sys.stdout', new=StringIO()) as fake_out:
                         main()
                         output = fake_out.getvalue()
@@ -231,7 +231,7 @@ class TestCLI:
     
     def test_categories_command_empty(self, sample_registry_file):
         """Test categories command with no categories."""
-        with patch('sys.argv', ['mcpred', '--registry', sample_registry_file, 'categories']):
+        with patch('sys.argv', ['mcpconf', '--registry', sample_registry_file, 'categories']):
             with patch('sys.stdout', new=StringIO()) as fake_out:
                 main()
                 output = fake_out.getvalue()
@@ -239,7 +239,7 @@ class TestCLI:
     
     def test_no_command_shows_help(self):
         """Test that running without command shows help."""
-        with patch('sys.argv', ['mcpred']):
+        with patch('sys.argv', ['mcpconf']):
             with patch('sys.stdout', new=StringIO()) as fake_out:
                 with pytest.raises(SystemExit):
                     main()

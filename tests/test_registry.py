@@ -6,8 +6,8 @@ import json
 import yaml
 from pathlib import Path
 
-from mcpred.registry import MCPServerRegistry
-from mcpred.schema import ServerEntry, ServerConfig, TransportType, DeploymentType
+from mcpconf.registry import MCPServerRegistry
+from mcpconf.schema import ServerEntry, ServerConfig, TransportType, DeploymentType
 
 
 class TestMCPServerRegistry:

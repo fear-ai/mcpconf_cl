@@ -1,1 +1,1 @@
-"""Test suite for mcpred package."""
+"""Test suite for mcpconf package."""
