@@ -1,4 +1,4 @@
-"""Setup configuration for mcpred package."""
+"""Setup configuration for mcpconf package."""
 
 from setuptools import setup, find_packages
 
