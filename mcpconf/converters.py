@@ -1,6 +1,7 @@
 """Format conversion utilities for different MCP client configurations."""
 
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
+
 from .schema import ServerEntry, TransportType
 
 
@@ -10,8 +11,8 @@ class FormatConverter:
     @staticmethod
     def to_claude_desktop(server: ServerEntry, server_id: str) -> Dict[str, Any]:
         """Convert server entry to Claude Desktop format."""
-        result = {"mcpServers": {}}
-        server_config = {}
+        result: Dict[str, Any] = {"mcpServers": {}}
+        server_config: Dict[str, Any] = {}
         
         if server.config.transport == TransportType.STDIO:
             if server.config.command:
@@ -32,10 +33,10 @@ class FormatConverter:
     @staticmethod
     def to_github_mcp(server: ServerEntry, server_id: str) -> Dict[str, Any]:
         """Convert server entry to GitHub MCP format."""
-        result = {"servers": {}}
+        result: Dict[str, Any] = {"servers": {}}
         
         if server.config.transport in [TransportType.HTTP, TransportType.HTTPS]:
-            server_config = {
+            server_config: Dict[str, Any] = {
                 "type": "http",
                 "url": server.config.url
             }
@@ -59,7 +60,7 @@ class FormatConverter:
         if server.config.command in ["python", "python3", "uv", "uvx"]:
             runtime_type = "python"
         
-        mcp_config = {}
+        mcp_config: Dict[str, Any] = {}
         if server.config.command:
             mcp_config["command"] = server.config.command
         if server.config.args:
@@ -67,7 +68,7 @@ class FormatConverter:
         if server.config.env:
             mcp_config["env"] = server.config.env
         
-        result = {
+        result: Dict[str, Any] = {
             "dxt_version": "1.0",
             "name": server_id,
             "display_name": server.name,
@@ -85,7 +86,7 @@ class FormatConverter:
         if server.source_url:
             result["repository"] = server.source_url
         if server.capabilities:
-            tools = []
+            tools: List[Dict[str, str]] = []
             if server.capabilities.tools:
                 for tool in server.capabilities.tools:
                     tools.append({
@@ -95,7 +96,7 @@ class FormatConverter:
             if tools:
                 result["tools"] = tools
         if server.compatibility:
-            compat = {}
+            compat: Dict[str, Any] = {}
             if server.compatibility.claude_desktop:
                 compat["claude_desktop"] = server.compatibility.claude_desktop
             if server.requirements and server.requirements.platforms:
@@ -154,7 +155,7 @@ class FormatConverter:
     @staticmethod
     def from_claude_desktop(config: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
         """Convert Claude Desktop format to registry format."""
-        servers = {}
+        servers: Dict[str, Dict[str, Any]] = {}
         
         if "mcpServers" not in config:
             return servers

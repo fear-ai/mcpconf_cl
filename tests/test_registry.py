@@ -1,13 +1,14 @@
 """Tests for registry management functionality."""
 
-import pytest
-import tempfile
 import json
-import yaml
+import tempfile
 from pathlib import Path
 
+import pytest
+import yaml
+
 from mcpconf.registry import MCPServerRegistry
-from mcpconf.schema import ServerEntry, ServerConfig, TransportType, DeploymentType
+from mcpconf.schema import DeploymentType, ServerConfig, ServerEntry, TransportType
 
 
 class TestMCPServerRegistry:

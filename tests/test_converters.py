@@ -1,8 +1,15 @@
 """Tests for format conversion utilities."""
 
 import pytest
+
 from mcpconf.converters import FormatConverter
-from mcpconf.schema import ServerEntry, ServerConfig, TransportType, DeploymentType, Capabilities
+from mcpconf.schema import (
+    Capabilities,
+    DeploymentType,
+    ServerConfig,
+    ServerEntry,
+    TransportType,
+)
 
 
 class TestFormatConverter:

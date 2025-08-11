@@ -1,10 +1,11 @@
 """Registry schema validation and structure definitions."""
 
-from typing import Dict, List, Optional, Union, Any
+import json
 from dataclasses import dataclass
 from enum import Enum
-import json
-import yaml
+from typing import Any, Dict, List, Optional, Union
+
+import yaml  # type: ignore[import-untyped]
 
 
 class DeploymentType(Enum):

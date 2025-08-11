@@ -1,11 +1,12 @@
 """Command-line interface for MCP server registry management."""
 
 import argparse
-import sys
 import json
-import yaml
+import sys
 from pathlib import Path
 from typing import Optional
+
+import yaml  # type: ignore[import-untyped]
 
 from .registry import MCPServerRegistry
 from .schema import RegistrySchema, ServerEntry
@@ -129,7 +130,7 @@ def cmd_convert(args) -> None:
         elif args.format == "dxt":
             result = registry.to_dxt_manifest(args.server)
         elif args.format == "hosts":
-            result = registry.to_hosts_format(args.server)
+            result = registry.to_hosts_format(args.server)  # type: ignore[assignment]
             print(result)
             return
         else:

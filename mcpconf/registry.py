@@ -1,13 +1,14 @@
 """Core registry implementation for MCP server management."""
 
-from pathlib import Path
-from typing import Dict, List, Optional, Union
 import json
-import yaml
 import os
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Union
 
-from .schema import Registry, ServerEntry, RegistrySchema, DeploymentType
+import yaml  # type: ignore[import-untyped]
+
 from .converters import FormatConverter
+from .schema import DeploymentType, Registry, RegistrySchema, ServerEntry
 
 
 class MCPServerRegistry:
@@ -237,7 +238,7 @@ class MCPServerRegistry:
         }
         
         for server_id, server in self.registry.servers.items():
-            data["servers"][server_id] = self._server_to_dict(server)
+            data["servers"][server_id] = self._server_to_dict(server)  # type: ignore[index]
         
         if self.registry.categories:
             data["categories"] = dict(self.registry.categories)
@@ -246,7 +247,7 @@ class MCPServerRegistry:
     
     def _server_to_dict(self, server: ServerEntry) -> Dict:
         """Convert ServerEntry to dictionary."""
-        result = {
+        result: Dict[str, Any] = {
             "name": server.name,
             "description": server.description,
             "version": server.version,
@@ -290,7 +291,7 @@ class MCPServerRegistry:
                 result["capabilities"] = caps
         
         if server.requirements:
-            reqs = {}
+            reqs: Dict[str, Any] = {}
             if server.requirements.platforms:
                 reqs["platforms"] = server.requirements.platforms
             if server.requirements.runtimes:
@@ -303,7 +304,7 @@ class MCPServerRegistry:
                 result["requirements"] = reqs
         
         if server.security:
-            sec = {}
+            sec: Dict[str, Any] = {}
             if server.security.requires_auth:
                 sec["requires_auth"] = server.security.requires_auth
             if server.security.permissions:

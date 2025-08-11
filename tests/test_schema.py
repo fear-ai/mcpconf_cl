@@ -1,9 +1,17 @@
 """Tests for schema validation and parsing."""
 
 import pytest
+
 from mcpconf.schema import (
-    RegistrySchema, ServerEntry, ServerConfig, TransportType, DeploymentType,
-    Capabilities, Requirements, Security, Compatibility
+    Capabilities,
+    Compatibility,
+    DeploymentType,
+    RegistrySchema,
+    Requirements,
+    Security,
+    ServerConfig,
+    ServerEntry,
+    TransportType,
 )
 
 

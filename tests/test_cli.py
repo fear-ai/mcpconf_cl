@@ -1,12 +1,13 @@
 """Tests for CLI functionality."""
 
-import pytest
-import tempfile
 import json
-import yaml
+import tempfile
+from io import StringIO
 from pathlib import Path
 from unittest.mock import patch
-from io import StringIO
+
+import pytest
+import yaml
 
 from mcpconf.cli import main
 
