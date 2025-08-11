@@ -162,16 +162,16 @@ def demo_validation():
     for server_id in registry.list_servers():
         errors = registry.validate_server(server_id)
         if errors:
-            print(f"❌ {server_id}: {errors}")
+            print(f" {server_id}: {errors}")
         else:
-            print(f"✅ {server_id}: Valid")
+            print(f" {server_id}: Valid")
     
     print()
 
 
 def main():
     """Run all demos."""
-    print("🚀 mcpred Demo - MCP Server Registry Management\n")
+    print(" mcpred Demo - MCP Server Registry Management\n")
     
     try:
         demo_basic_usage()
@@ -180,10 +180,10 @@ def main():
         demo_search_and_filter()
         demo_validation()
         
-        print("✨ Demo completed successfully!")
+        print(" Demo completed successfully!")
         
     except Exception as e:
-        print(f"❌ Demo failed: {e}")
+        print(f" Demo failed: {e}")
         import traceback
         traceback.print_exc()
 
